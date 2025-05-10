@@ -111,6 +111,15 @@
       .form-input {
         width: 100%;
       }
+
+      .response-text {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+        border-left: 4px solid #4CAF50;
+        display: none;
+      }
     }
   </style>
 </head>
@@ -209,6 +218,8 @@
 
   <div id="notification">📬 通知已送出！</div>
 
+  <div id="responseContainer" class="response-text"></div>
+
 <script>
 function sendSecretRequest() {
   const station = document.getElementById('station').value;
@@ -222,10 +233,18 @@ function sendSecretRequest() {
   fetch(url)
     .then(response => {
       if (response.ok) {
-        showNotification("📬 通知已送出！");
+        return response.json();
       } else {
         showNotification("⚠️ 通知失敗（伺服器錯誤）");
+        throw new Error('Server error');
       }
+    })
+    .then(data => {
+      showNotification("📬 通知已送出！");
+      // Display the response text on the page
+      const responseContainer = document.getElementById('responseContainer');
+      responseContainer.textContent = data.text;
+      responseContainer.style.display = 'block';
     })
     .catch(error => {
       console.error('Error sending request:', error);
