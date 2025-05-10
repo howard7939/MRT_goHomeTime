@@ -1,4 +1,4 @@
-<!--建立時間: 2025.04.26-->
+<!--建立時間: 2025.05.10-->
 
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -7,6 +7,77 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>When I will arrive home</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    p {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #666;
+    }
+    
+    #myForm {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .form-group {
+      display: flex;
+      align-items: center;
+    }
+    
+    .form-label {
+      flex: 0 0 100px;
+      text-align: right;
+      padding-right: 10px;
+      font-weight: bold;
+    }
+    
+    .form-input {
+      flex: 1;
+    }
+    
+    select, button {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #45a049;
+    }
+    
     #notification {
       display: none;
       position: fixed;
@@ -21,6 +92,26 @@
       font-size: 16px;
       transition: right 0.5s ease, opacity 0.5s ease;
     }
+    
+    /* Mobile optimization */
+    @media (max-width: 480px) {
+      .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .form-label {
+        flex: none;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+        padding-right: 0;
+      }
+      
+      .form-input {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -28,79 +119,91 @@
   <p>依據目前情況輸入。</p>
   
   <form id="myForm" onsubmit="event.preventDefault(); sendSecretRequest();">
-    <label>自行車: </label>
-    <input type="checkbox" name="Q1" id="bike">
-    <br><br>
-
-    <label>捷運站: </label>
-    <select name="Q2" id="station">
-    <optgroup label="G 松山新店線">
-        <option value="G07 公館站">公館</option>
-        <option value="G08 台電大樓站">台電大樓</option>
-        <option value="G09 古亭站">古亭</option>
-        <option value="G10 中正紀念堂站">中正紀念堂G10</option>
-    </optgroup>
-    <optgroup label="R 淡水信義線">
-        <option value="R04 信義安和站">信義安和</option>
-        <option value="R05 大安站">大安</option>
-        <option value="R06 大安森林公園站">大安森林公園</option>
-        <option value="R07 東門站">東門</option>
-        <option value="R08 中正紀念堂站">中正紀念堂R08</option>
-        <option value="R09 台大醫院站">台大醫院</option>
-        <option value="R10 台北車站">台北車站</option>
-        <option value="R11 中山站">中山</option>
-        <option value="R12 雙連站">雙連</option>
-        <option value="R13 民權西路站">民權西路</option>
-        <option value="R14 圓山站">圓山</option>
-        <option value="R15 劍潭站">劍潭</option>
-        <option value="R16 士林站">士林</option>
-        <option value="R17 芝山站">芝山</option>
-        <option value="R18 明德站">明德</option>
-        <option value="R19 石牌站">石牌</option>
-        <option value="R20 唭哩岸站">唭哩岸</option>
-        <option value="R21 奇岩站">奇岩</option>
-        <option value="R22 北投站">北投</option>
-    </optgroup>
-    <optgroup label="BL 板南線">
-        <option value="BL06 府中站">府中</option>
-        <option value="BL07 板橋站">板橋</option>
-        <option value="BL08 新埔站">新埔</option>
-        <option value="BL09 江子翠站">江子翠</option>
-        <option value="BL10 龍山寺站">龍山寺</option>
-        <option value="BL11 西門站">西門</option>
-        <option value="BL12 台北車站BL12站">台北車站BL12</option>
-        <option value="BL13 善導寺站">善導寺</option>
-        <option value="BL14 忠孝新生站">忠孝新生</option>
-        <option value="BL15 忠孝復興站">忠孝復興</option>
-        <option value="BL16 忠孝敦化站">忠孝敦化</option>
-        <option value="BL17 國父紀念館站">國父紀念館</option>
-        <option value="BL18 市政府站">市政府</option>
-        <option value="BL19 永春站">永春</option>
-    </optgroup>
-    </select>
-
-    <br><br>
-
-    <label>校正: </label>
-    <select name="Q3" id="modification">
-        <option value="5">+5min</option>
-        <option value="4">+4min</option>
-        <option value="3">+3min</option>
-        <option value="2">+2min</option>
-        <option value="1">+1min</option>
-        <option value="0" selected>+0min</option>
-        <option value="-1">-1min</option>
-        <option value="-2">-2min</option>
-        <option value="-3">-3min</option>
-        <option value="-4">-4min</option>
-        <option value="-5">-5min</option>
-    </select>
-    <br><br>
-
-    <label>寄送到"家人": </label>
-    <input type="checkbox" name="Q4" id="parents">
-    <br><br>
-
+    <div class="form-group">
+      <label class="form-label">自行車: </label>
+      <div class="form-input">
+        <input type="checkbox" name="Q1" id="bike">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">捷運站: </label>
+      <div class="form-input">
+        <select name="Q2" id="station">
+          <optgroup label="G 松山新店線">
+            <option value="G07 公館站">公館</option>
+            <option value="G08 台電大樓站">台電大樓</option>
+            <option value="G09 古亭站">古亭</option>
+            <option value="G10 中正紀念堂站">中正紀念堂G10</option>
+          </optgroup>
+          <optgroup label="R 淡水信義線">
+            <option value="R03 台北101世貿站">台北101/世貿</option>
+            <option value="R04 信義安和站">信義安和</option>
+            <option value="R05 大安站">大安</option>
+            <option value="R06 大安森林公園站">大安森林公園</option>
+            <option value="R07 東門站">東門</option>
+            <option value="R08 中正紀念堂站">中正紀念堂R08</option>
+            <option value="R09 台大醫院站">台大醫院</option>
+            <option value="R10 台北車站">台北車站</option>
+            <option value="R11 中山站">中山</option>
+            <option value="R12 雙連站">雙連</option>
+            <option value="R13 民權西路站">民權西路</option>
+            <option value="R14 圓山站">圓山</option>
+            <option value="R15 劍潭站">劍潭</option>
+            <option value="R16 士林站">士林</option>
+            <option value="R17 芝山站">芝山</option>
+            <option value="R18 明德站">明德</option>
+            <option value="R19 石牌站">石牌</option>
+            <option value="R20 唭哩岸站">唭哩岸</option>
+            <option value="R21 奇岩站">奇岩</option>
+            <option value="R22 北投站">北投</option>
+          </optgroup>
+          <optgroup label="BL 板南線">
+            <option value="BL06 府中站">府中</option>
+            <option value="BL07 板橋站">板橋</option>
+            <option value="BL08 新埔站">新埔</option>
+            <option value="BL09 江子翠站">江子翠</option>
+            <option value="BL10 龍山寺站">龍山寺</option>
+            <option value="BL11 西門站">西門</option>
+            <option value="BL12 台北車站BL12站">台北車站BL12</option>
+            <option value="BL13 善導寺站">善導寺</option>
+            <option value="BL14 忠孝新生站">忠孝新生</option>
+            <option value="BL15 忠孝復興站">忠孝復興</option>
+            <option value="BL16 忠孝敦化站">忠孝敦化</option>
+            <option value="BL17 國父紀念館站">國父紀念館</option>
+            <option value="BL18 市政府站">市政府</option>
+            <option value="BL19 永春站">永春</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">校正: </label>
+      <div class="form-input">
+        <select name="Q3" id="modification">
+          <option value="5">+5min</option>
+          <option value="4">+4min</option>
+          <option value="3">+3min</option>
+          <option value="2">+2min</option>
+          <option value="1">+1min</option>
+          <option value="0" selected>+0min</option>
+          <option value="-1">-1min</option>
+          <option value="-2">-2min</option>
+          <option value="-3">-3min</option>
+          <option value="-4">-4min</option>
+          <option value="-5">-5min</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label class="form-label">寄送到"家人": </label>
+      <div class="form-input">
+        <input type="checkbox" name="Q4" id="parents">
+      </div>
+    </div>
+    
     <button type="submit">Send Notify!</button>
   </form>
 
