@@ -1,0 +1,153 @@
+<!--建立時間: 2025.04.26-->
+
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>When I will arrive home</title>
+  <style>
+    #notification {
+      display: none;
+      position: fixed;
+      top: 20px;
+      right: -300px; /* Start hidden off screen */
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      z-index: 1000;
+      font-size: 16px;
+      transition: right 0.5s ease, opacity 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+  <h1>計算何時回到家</h1>
+  <p>依據目前情況輸入。</p>
+  
+  <form id="myForm" onsubmit="event.preventDefault(); sendSecretRequest();">
+    <label>自行車: </label>
+    <input type="checkbox" name="Q1" id="bike">
+    <br><br>
+
+    <label>捷運站: </label>
+    <select name="Q2" id="station">
+    <optgroup label="G 松山新店線">
+        <option value="G07 公館站">公館</option>
+        <option value="G08 台電大樓站">台電大樓</option>
+        <option value="G09 古亭站">古亭</option>
+        <option value="G10 中正紀念堂站">中正紀念堂G10</option>
+    </optgroup>
+    <optgroup label="R 淡水信義線">
+        <option value="R04 信義安和站">信義安和</option>
+        <option value="R05 大安站">大安</option>
+        <option value="R06 大安森林公園站">大安森林公園</option>
+        <option value="R07 東門站">東門</option>
+        <option value="R08 中正紀念堂站">中正紀念堂R08</option>
+        <option value="R09 台大醫院站">台大醫院</option>
+        <option value="R10 台北車站">台北車站</option>
+        <option value="R11 中山站">中山</option>
+        <option value="R12 雙連站">雙連</option>
+        <option value="R13 民權西路站">民權西路</option>
+        <option value="R14 圓山站">圓山</option>
+        <option value="R15 劍潭站">劍潭</option>
+        <option value="R16 士林站">士林</option>
+        <option value="R17 芝山站">芝山</option>
+        <option value="R18 明德站">明德</option>
+        <option value="R19 石牌站">石牌</option>
+        <option value="R20 唭哩岸站">唭哩岸</option>
+        <option value="R21 奇岩站">奇岩</option>
+        <option value="R22 北投站">北投</option>
+    </optgroup>
+    <optgroup label="BL 板南線">
+        <option value="BL06 府中站">府中</option>
+        <option value="BL07 板橋站">板橋</option>
+        <option value="BL08 新埔站">新埔</option>
+        <option value="BL09 江子翠站">江子翠</option>
+        <option value="BL10 龍山寺站">龍山寺</option>
+        <option value="BL11 西門站">西門</option>
+        <option value="BL12 台北車站BL12站">台北車站BL12</option>
+        <option value="BL13 善導寺站">善導寺</option>
+        <option value="BL14 忠孝新生站">忠孝新生</option>
+        <option value="BL15 忠孝復興站">忠孝復興</option>
+        <option value="BL16 忠孝敦化站">忠孝敦化</option>
+        <option value="BL17 國父紀念館站">國父紀念館</option>
+        <option value="BL18 市政府站">市政府</option>
+        <option value="BL19 永春站">永春</option>
+    </optgroup>
+    </select>
+
+    <br><br>
+
+    <label>校正: </label>
+    <select name="Q3" id="modification">
+        <option value="5">+5min</option>
+        <option value="4">+4min</option>
+        <option value="3">+3min</option>
+        <option value="2">+2min</option>
+        <option value="1">+1min</option>
+        <option value="0" selected>+0min</option>
+        <option value="-1">-1min</option>
+        <option value="-2">-2min</option>
+        <option value="-3">-3min</option>
+        <option value="-4">-4min</option>
+        <option value="-5">-5min</option>
+    </select>
+    <br><br>
+
+    <label>寄送到"家人": </label>
+    <input type="checkbox" name="Q4" id="parents">
+    <br><br>
+
+    <button type="submit">Send Notify!</button>
+  </form>
+
+  <div id="notification">📬 通知已送出！</div>
+
+<script>
+function sendSecretRequest() {
+  const station = document.getElementById('station').value;
+  const bike = document.getElementById('bike').checked ? 1 : 0;
+  const parents = document.getElementById('parents').checked ? 1 : 0;
+  const modification = document.getElementById('modification').value;
+  
+  const url = `https://script.google.com/macros/s/AKfycbzgp-DRh5C2mdNrLFXmWh5ANjyQF-YX0smh-hAadReGJz8KnSDxSIpPn_Z5jnN9lNT2/exec?station="${station}"&bike=${bike}&parents=${parents}&modification=${modification}`;
+
+  console.log("Opening URL:", url);
+  fetch(url)
+    .then(response => {
+      if (response.ok) {
+        showNotification("📬 通知已送出！");
+      } else {
+        showNotification("⚠️ 通知失敗（伺服器錯誤）");
+      }
+    })
+    .catch(error => {
+      console.error('Error sending request:', error);
+      showNotification("⚠️ 通知失敗（網路錯誤）");
+    });
+}
+
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  notification.textContent = message;
+  notification.style.display = 'block';
+  setTimeout(() => {
+    notification.style.right = '20px'; // Slide in
+    notification.style.opacity = '1';
+  }, 10);
+
+  setTimeout(() => {
+    notification.style.right = '-300px'; // Slide out
+    notification.style.opacity = '0';
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 500); // match transition
+  }, 3000);
+}
+</script>
+
+</body>
+</html>
